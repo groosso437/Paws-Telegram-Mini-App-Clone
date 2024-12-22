@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 /**
  * This project was developed by Nikandr Surkov.
  * 
@@ -9,6 +7,7 @@
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { useEffect } from "react";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -32,6 +31,24 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Telegram SDK Initialization
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Telegram) {
+      const tg = window.Telegram.WebApp;
+
+      tg.ready(); // جاهزية Telegram Web App
+      tg.expand(); // توسيع التطبيق ليملأ الشاشة بالكامل
+
+      // تخصيص الزر الرئيسي في Telegram
+      tg.MainButton.text = "إغلاق";
+      tg.MainButton.color = "#0088cc"; // لون الزر
+      tg.MainButton.show(); // عرض الزر
+      tg.MainButton.onClick(() => {
+        tg.close(); // يغلق التطبيق عند النقر
+      });
+    }
+  }, []);
+
   return (
     <html lang="en">
       <body
